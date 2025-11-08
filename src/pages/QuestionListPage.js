@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { getQuestions } from "../api";
 import DateText from "../components/DateText";
@@ -35,10 +35,23 @@ function QuestionItem({ question }) {
 }
 
 function QuestionListPage() {
-  const [keyword, setKeyword] = useState("");
-  const questions = getQuestions();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initKeyword = searchParams.get("keyword");
+  const [keyword, setKeyword] = useState(initKeyword);
+  const questions = getQuestions(initKeyword);
 
   const handleKeywordChange = (e) => setKeyword(e.target.value);
+
+  const handeleSubmit = (e) => {
+    e.preventDefault();
+    setSearchParams(
+      keyword
+        ? {
+            keyword,
+          }
+        : {}
+    );
+  };
 
   return (
     <ListPage
@@ -46,7 +59,7 @@ function QuestionListPage() {
       title="커뮤니티"
       description="코드댓의 2만 수강생들과 함께 공부해봐요."
     >
-      <form className={searchBarStyles.form}>
+      <form className={searchBarStyles.form} onSubmit={handeleSubmit}>
         <input
           name="keyword"
           value={keyword}
