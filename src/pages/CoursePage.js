@@ -1,4 +1,4 @@
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams, useNavigate } from "react-router-dom";
 import { addWishlist, getCourseBySlug } from "../api";
 import Button from "../components/Button";
 import Container from "../components/Container";
@@ -11,6 +11,7 @@ function CoursePage() {
   const { courseSlug } = useParams();
   const course = getCourseBySlug(courseSlug);
   const courseColor = getCourseColor(course?.code);
+  const navigate = useNavigate();
 
   if (!course) {
     return <Navigate to="/courses" />;
@@ -22,6 +23,7 @@ function CoursePage() {
 
   const handleAddWishlistClick = () => {
     addWishlist(course?.slug);
+    navigate("/Wishlist");
   };
 
   return (
